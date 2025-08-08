@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wasm Game of Life</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            text-align: center;
+            background-color: #222;
+            color: #eee;
+            margin: 0;
+            padding: 10px;
+        }
+        canvas {
+            border: 1px solid #555;
+            cursor: pointer;
+            /* The canvas will be a fixed size, but we can scale it down */
+            max-width: 100%;
+        }
+        button {
+            margin: 5px;
+            padding: 10px 20px;
+            font-size: 16px;
+        }
+
+        /* --- This is our media query for mobile phones --- */
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 1.5em; /* Make title smaller */
+            }
+            button {
+                display: block;  /* Stack buttons vertically */
+                width: 80%;      /* Make buttons wide */
+                margin: 10px auto; /* Center the stacked buttons */
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>WebAssembly Game of Life</h1>
+    <canvas id="game-canvas"></canvas>
+    <div>
+        <button id="start-button">Start</button>
+        <button id="clear-button">Clear</button>
+    </div>
+
+    <script src="gol.js"></script>
+    <script src="main.js"></script>
+</body>
+</html>
