@@ -1,11 +1,11 @@
-// main.js
+// Ensure Module object exists
+if (typeof Module === 'undefined') {
+    var Module = {};
+}
 
-// Wait for the Wasm module to be ready
 Module.onRuntimeInitialized = () => {
     console.log("Wasm module is ready!");
 
-    // --- Get API functions from Wasm ---
-    // We use the underscore syntax Emscripten creates
     const getWidth = Module._get_width;
     const getHeight = Module._get_height;
     const getGridPointer = Module._get_grid_pointer;
@@ -16,14 +16,15 @@ Module.onRuntimeInitialized = () => {
     const canvas = document.getElementById("game-canvas");
     const startButton = document.getElementById("start-button");
     const clearButton = document.getElementById("clear-button");
+    const speedSlider = document.getElementById("speed-slider");
+    const speedValue = document.getElementById("speed-value");
     const ctx = canvas.getContext("2d");
 
-    // --- Setup Memory Bridge ---
     const gridPointer = getGridPointer();
     const gridWidth = getWidth();
     const gridHeight = getHeight();
 
-    const wasmGrid = new Uint8Array(
+    const wasmGrid = new Uint8Array( // Taking the data of this from wasm memory and creating a view of it
         Module.HEAPU8.buffer,
         gridPointer,
         gridWidth * gridHeight
@@ -33,14 +34,17 @@ Module.onRuntimeInitialized = () => {
         `Grid is ${gridWidth}x${gridHeight} and starts at memory address ${gridPointer}`
     );
 
-    const CELL_SIZE = 10; // Size of each cell in pixels
+    const CELL_SIZE = 10;
     canvas.width = gridWidth * CELL_SIZE;
     canvas.height = gridHeight * CELL_SIZE;
 
     let animationId = null;
+    let currentSpeed = 10;
 
     function drawGrid() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
+        
+        // Draw live cells
         ctx.fillStyle = "#add8e6";
         for (let y = 0; y < gridHeight; y++) {
             for (let x = 0; x < gridWidth; x++) {
@@ -55,24 +59,37 @@ Module.onRuntimeInitialized = () => {
                 }
             }
         }
+        
+        // Draw grid lines
+        ctx.strokeStyle = "#444";
+        ctx.lineWidth = 0.5;
+        ctx.beginPath();
+        
+        // Vertical lines
+        for (let x = 0; x <= gridWidth; x++) {
+            ctx.moveTo(x * CELL_SIZE, 0);
+            ctx.lineTo(x * CELL_SIZE, canvas.height);
+        }
+        
+        // Horizontal lines
+        for (let y = 0; y <= gridHeight; y++) {
+            ctx.moveTo(0, y * CELL_SIZE);
+            ctx.lineTo(canvas.width, y * CELL_SIZE);
+        }
+        
+        ctx.stroke();
     }
 
     function renderLoop() {
         computeNextGeneration();
         drawGrid();
-        animationId = requestAnimationFrame(renderLoop);
+        animationId = setTimeout(renderLoop, 1000 / currentSpeed);
     }
 
     function handleInteraction(event) {
-        // Don't allow changing cells while the simulation is running
         if (animationId) return;
-
-        // Prevent default behavior, like scrolling on touch
         event.preventDefault();
-
         const rect = canvas.getBoundingClientRect();
-
-        // Check if it's a touch or mouse event to get coordinates
         const clientX = event.touches
             ? event.touches[0].clientX
             : event.clientX;
@@ -83,7 +100,6 @@ Module.onRuntimeInitialized = () => {
         const x = clientX - rect.left;
         const y = clientY - rect.top;
 
-        // Convert pixel coordinates to grid coordinates and scale for canvas css resize
         const gridX = Math.floor((x / rect.width) * gridWidth);
         const gridY = Math.floor((y / rect.height) * gridHeight);
 
@@ -93,7 +109,7 @@ Module.onRuntimeInitialized = () => {
 
     startButton.addEventListener("click", () => {
         if (animationId) {
-            cancelAnimationFrame(animationId);
+            clearTimeout(animationId);
             animationId = null;
             startButton.textContent = "Start";
         } else {
@@ -104,7 +120,7 @@ Module.onRuntimeInitialized = () => {
 
     clearButton.addEventListener("click", () => {
         if (animationId) {
-            cancelAnimationFrame(animationId);
+            clearTimeout(animationId);
             animationId = null;
             startButton.textContent = "Start";
         }
@@ -112,8 +128,14 @@ Module.onRuntimeInitialized = () => {
         drawGrid();
     });
 
+    speedSlider.addEventListener("input", (e) => {
+        currentSpeed = parseInt(e.target.value);
+        speedValue.textContent = `${currentSpeed} FPS`;
+    });
+
     canvas.addEventListener("click", handleInteraction);
     canvas.addEventListener("touchstart", handleInteraction);
 
-    drawGrid(); // Initial draw
+    speedValue.textContent = `${currentSpeed} FPS`;
+    drawGrid();
 };
