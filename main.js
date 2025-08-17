@@ -18,7 +18,28 @@ Module.onRuntimeInitialized = () => {
     const clearButton = document.getElementById("clear-button");
     const speedSlider = document.getElementById("speed-slider");
     const speedValue = document.getElementById("speed-value");
+    const themeSelector = document.getElementById("theme-selector");
     const ctx = canvas.getContext("2d");
+
+    const themes = {
+        dark: {
+            cellColor: "#add8e6",
+            gridColor: "#444",
+            className: "dark"
+        },
+        light: {
+            cellColor: "#2c3e50",
+            gridColor: "#dce4ec",
+            className: "light"
+        },
+        retro: {
+            cellColor: "#000000",
+            gridColor: "#000000",
+            className: "retro"
+        }
+    };
+
+    let currentTheme = themes.dark;
 
     const gridPointer = getGridPointer();
     const gridWidth = getWidth();
@@ -45,7 +66,7 @@ Module.onRuntimeInitialized = () => {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         
         // Draw live cells
-        ctx.fillStyle = "#add8e6";
+        ctx.fillStyle = currentTheme.cellColor;
         for (let y = 0; y < gridHeight; y++) {
             for (let x = 0; x < gridWidth; x++) {
                 const index = y * gridWidth + x;
@@ -61,8 +82,8 @@ Module.onRuntimeInitialized = () => {
         }
         
         // Draw grid lines
-        ctx.strokeStyle = "#444";
-        ctx.lineWidth = 0.5;
+        ctx.strokeStyle = currentTheme.gridColor;
+        ctx.lineWidth = currentTheme.className === 'retro' ? 2 : 0.5;
         ctx.beginPath();
         
         // Vertical lines
@@ -78,6 +99,15 @@ Module.onRuntimeInitialized = () => {
         }
         
         ctx.stroke();
+    }
+
+    function applyTheme(themeName) {
+        const newTheme = themes[themeName];
+        if (!newTheme) return;
+
+        currentTheme = newTheme;
+        document.body.className = newTheme.className;
+        drawGrid();
     }
 
     function renderLoop() {
@@ -136,6 +166,10 @@ Module.onRuntimeInitialized = () => {
     canvas.addEventListener("click", handleInteraction);
     canvas.addEventListener("touchstart", handleInteraction);
 
+    themeSelector.addEventListener("change", (e) => {
+        applyTheme(e.target.value);
+    });
+
     speedValue.textContent = `${currentSpeed} FPS`;
-    drawGrid();
+    applyTheme('dark'); // Set initial theme
 };
