@@ -182,6 +182,31 @@
             white-space: nowrap;
             flex-shrink: 0;
         }
+
+        .theme-control {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            background: rgba(13, 17, 23, 0.6);
+            padding: 8px;
+            border-radius: 4px;
+            border: 1px solid #30363d;
+        }
+
+        .theme-control label {
+            font-weight: 600;
+            color: #f0f6fc;
+        }
+
+        #theme-selector {
+            width: 100%;
+            padding: 8px;
+            border-radius: 4px;
+            background: #21262d;
+            color: #f0f6fc;
+            border: 1px solid #30363d;
+            font-size: 14px;
+        }
         
         .instructions {
             background: rgba(13, 17, 23, 0.4);
@@ -342,6 +367,238 @@
             }
         }
     </style>
+    <style>
+        /* Light Theme */
+        body.light {
+            background: linear-gradient(135deg, #e9eef2 0%, #f7f8fa 100%);
+            color: #2c3e50;
+        }
+
+        body.light h1 {
+            color: #2c3e50;
+            text-shadow: none;
+        }
+
+        body.light .subtitle {
+            color: #7f8c8d;
+        }
+
+        body.light .game-area {
+            background: #ffffff;
+            border-color: #dce4ec;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+        }
+
+        body.light canvas {
+            border-color: #dce4ec;
+        }
+
+        body.light .controls-panel .control-row,
+        body.light .speed-control,
+        body.light .theme-control {
+            background: #f8f9fa;
+            border-color: #dce4ec;
+        }
+
+        body.light .speed-control label,
+        body.light .theme-control label {
+            color: #2c3e50;
+        }
+
+        body.light #speed-slider {
+            background: #dce4ec;
+        }
+
+        body.light #speed-slider::-webkit-slider-thumb {
+            background: #3498db;
+        }
+
+        body.light #speed-slider::-moz-range-thumb {
+            background: #3498db;
+        }
+
+        body.light #speed-value {
+            color: #3498db;
+        }
+
+        body.light button {
+            background: #3498db;
+            border-color: #2980b9;
+            color: #ffffff;
+        }
+
+        body.light button:hover {
+            background: #2980b9;
+            border-color: #2471a3;
+        }
+
+        body.light #clear-button {
+            background: #e74c3c;
+            border-color: #c0392b;
+        }
+
+        body.light #clear-button:hover {
+            background: #c0392b;
+            border-color: #a93226;
+        }
+
+        body.light #theme-selector {
+            background: #ffffff;
+            color: #2c3e50;
+            border-color: #dce4ec;
+        }
+
+        body.light .instructions {
+            background: #f8f9fa;
+            border-color: #3498db;
+            color: #7f8c8d;
+        }
+
+        body.light .footer {
+            border-top-color: #dce4ec;
+        }
+
+        body.light .github-link {
+            background: #f8f9fa;
+            border-color: #dce4ec;
+            color: #3498db;
+        }
+
+        body.light .github-link:hover {
+            background: rgba(52, 152, 219, 0.1);
+            border-color: #3498db;
+            color: #2980b9;
+        }
+
+        /* Retro Theme */
+        body.retro {
+            font-family: 'Courier New', Courier, monospace;
+            background: #C7C7C7;
+            color: #000000;
+        }
+
+        body.retro h1 {
+            color: #000000;
+            text-shadow: none;
+        }
+
+        body.retro .subtitle {
+            color: #444444;
+        }
+
+        body.retro .game-area {
+            background: #B0B0B0;
+            border: 2px solid #000000;
+            border-radius: 0;
+            box-shadow: 4px 4px 0px #000000;
+        }
+
+        body.retro canvas {
+            border: 2px solid #000000;
+            border-radius: 0;
+        }
+
+        body.retro .controls-panel .control-row,
+        body.retro .speed-control,
+        body.retro .theme-control {
+            background: #DCDCDC;
+            border: 2px solid #000000;
+            border-radius: 0;
+        }
+
+        body.retro .speed-control label,
+        body.retro .theme-control label {
+            color: #000000;
+        }
+
+        body.retro #speed-slider {
+            -webkit-appearance: none;
+            appearance: none;
+            height: 8px;
+            background: #999999;
+            outline: 2px solid #000000;
+        }
+
+        body.retro #speed-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            background: #444444;
+            cursor: pointer;
+            border: 2px solid #000000;
+            border-radius: 0;
+        }
+
+        body.retro #speed-slider::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            background: #444444;
+            cursor: pointer;
+            border: 2px solid #000000;
+            border-radius: 0;
+        }
+
+        body.retro #speed-value {
+            color: #000000;
+        }
+
+        body.retro button {
+            background: #999999;
+            border: 2px solid #000000;
+            color: #000000;
+            border-radius: 0;
+            box-shadow: 2px 2px 0px #000000;
+        }
+
+        body.retro button:hover {
+            background: #AAAAAA;
+        }
+
+        body.retro button:active {
+            box-shadow: none;
+            transform: translate(2px, 2px);
+        }
+
+        body.retro #clear-button {
+            background: #A83232;
+            color: #FFFFFF;
+        }
+
+        body.retro #clear-button:hover {
+            background: #BF3A3A;
+        }
+
+        body.retro #theme-selector {
+            background: #DCDCDC;
+            color: #000000;
+            border: 2px solid #000000;
+            border-radius: 0;
+        }
+
+        body.retro .instructions {
+            background: #DCDCDC;
+            border-left: 4px solid #000000;
+            color: #000000;
+            border-radius: 0;
+        }
+
+        body.retro .footer {
+            border-top: 2px solid #000000;
+        }
+
+        body.retro .github-link {
+            background: #DCDCDC;
+            border: 2px solid #000000;
+            color: #000000;
+            border-radius: 0;
+        }
+
+        body.retro .github-link:hover {
+            background: #EAEAEA;
+            color: #000000;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
@@ -371,7 +628,14 @@
                     </div>
                 </div>
                 
-
+                <div class="theme-control">
+                    <label for="theme-selector">Theme</label>
+                    <select id="theme-selector">
+                        <option value="dark">Dark</option>
+                        <option value="light">Light</option>
+                        <option value="retro">Retro</option>
+                    </select>
+                </div>
             </div>
         </div>
         
