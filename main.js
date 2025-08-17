@@ -33,8 +33,8 @@ Module.onRuntimeInitialized = () => {
             className: "light"
         },
         retro: {
-            cellColor: "#000000",
-            gridColor: "#000000",
+            cellColor: "#33FF77",
+            gridColor: "#2A553A",
             className: "retro"
         }
     };
